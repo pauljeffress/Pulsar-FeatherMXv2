@@ -36,11 +36,32 @@
                             //       * SPITransfer.h and SPITransfer.cpp
                             //       they live in .pio/libdeps/..../SerialTransfer/src/
 
-#include "SharedSettings.h" // header file for my SharedSettings data structures
+#include "SharedAgtFmxSettings.h" // header file for my SharedSettings data structures
 
-#include <PulsarCommon.h>
+#include "setFmx_fns.h" // one of mine.
+#include "misc_fns.h"   // one of mine.
 
-#include "mavlink_fns.h"    // my header file for my own mavlink functions.
+
+// Includes from various stuff I need from Pulsar_Shared_Source
+#include "CBP.h"    // my CAN Boat Protocol
+#include "can_fns.h"  
+#include "debug_fns.h"
+#include "timer_fns.h"
+#include "Unions.h"
+#include "pulsar_packer_fns.h"
+#include "pulsar_buffer_fns.h"
+#include "case_check_CANbus.h"
+#include "case_check_power.h"
+#include "mavlink_fns.h"
+#include "PowerFeatherSettings_fns.h"
+#include "TFTFeatherInternalSettings_fns.h"
+#include "FmxSettings_fns.h"
+#include "SharedAgtFmxSettings_fns.h"
+#include "pulsar_boat_tofrom_ground_fns.h"
+#include "RTC_fns.h"
+
+#define GOOD true
+#define BAD false
 
 
 /*=======================*/
@@ -50,6 +71,7 @@
 
 // DS18B20 sensor - Data wire is plugged into port 2 on the Arduino
 #define ONE_WIRE_BUS 4
+
 
 // 12v switched power outputs
 #define PI_PWR_PIN              23 // The pin the FMX controls the power supply to the Pi on.
@@ -61,6 +83,8 @@
 #define MAVLINKHEARTBEATPERIODSECONDS   20  // seconds - how often should we send a MAVLink HEARTBEAT to the AutoPilot
 #define TX_TO_AP_PERIOD_SECONDS         120  // seconds - how often should we do periodic TX to AutoPilot
 
+// Debugs
+#define RX_FROM_AGT_DEBUG   // uncomment if you want the case_rx_from_agt() function to execute its debugPrint... statements
 
 /*=======================*/
 /* define any enums      */
@@ -78,6 +102,7 @@ typedef enum PULSAR_MAIN_SM_STATE     // State machine states for the main state
     TX_TO_AP,
     RX_FROM_AGT,
     PROCESS_AGT,
+    PROCESS_AGT_FOR_AP,
     TX_TO_AGT,
     TX_TO_LOGGER,
 } PULSAR_MAIN_SM_STATE;
@@ -98,11 +123,10 @@ extern Uart Serial2;
 extern Uart Serial3;
 extern SerialTransfer STdriverF2A;
 
-
-extern FeatherSharedSettings myFeatherSharedSettings;
-extern AgtSharedSettings myAgtSharedSettings;
-
-extern bool flag_do_agt_tx;
+extern bool flag_tx_msg_to_agt;
+extern bool flag_got_msg_from_agt;
+extern bool flag_got_msg_from_agt_with_mission;
+extern bool flag_tx_msg_to_ap;
 
 extern bool sensor_sht31_status;
 extern bool sensor_ambientlight_status;
@@ -122,24 +146,8 @@ void actuatorsSetup();
 void sensorsSetup();
 void sensorsTest();
 
-void setupPins();
-
 void serialSetup();
 
-void mavlink_fmx_send_heartbeat_to_ap();
-
-void mavlink_request_datastream();
-void mavlink_unrequest_datastream();
-void mavlink_request_streaming_params_from_ap();
-void mavlink_unrequest_streaming_params_from_ap();
-
-void request_one_param_from_ap();
-void set_one_param_from_ap(); 
-void set_arm_ap();
-void set_disarm_ap();
-void set_flightmode_ap(float desired_flightmode);
-
-void mavlink_receive();
 
 void case_loop_init();
 void case_zzz();
@@ -154,14 +162,9 @@ void case_process_autopilot();
 void case_tx_to_autopilot();
 void case_rx_from_agt();
 void case_process_agt();
+void case_process_agt_for_ap();
 void case_tx_to_agt();
 void case_tx_to_logger();
-void case_tickle_watchdog();
-void case_sleep_yet();
-
-bool sendSharedSettings_to_AGT(void);
-void initFeatherSharedSettings(void);
-void preptosendFeatherSharedSettings(void);
 
 void enableLogging(Stream &logPort);
 void disableLogging(void);
@@ -176,8 +179,6 @@ void logPrintlnFlt(float number);
 int16_t int32_to_int16_a(int32_t input_int32);
 uint16_t int32_to_int16_b(int32_t input_int32);
 uint16_t int32_to_int16_c(int32_t input_int32);
-
-String my64toString(uint64_t x);
 
 void actuatorStrobeOn();
 void actuatorStrobeOff();

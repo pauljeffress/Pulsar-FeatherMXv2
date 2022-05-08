@@ -6,28 +6,30 @@
 
 void sensorsSetup()
 {
-  debugPrintln("sensorsSetup() - executing");
+  debugPrintln("sensorsSetup() - Starting.");
   
   // Setup the SHT31 sensor
   debugPrintln("sensorsSetup() - SHT31 initialising");
-  if (!sht31.begin(0x44)) // Set to 0x45 for alternate i2c addr
-  {
-    // xxx - Even when the SHT31 is not connected, the begin still seems to respond true 
-    // and hence this code here does not get run! Whats worse is that if the sensor is disconnected
-    // and I guess if it is connected but failing, when we get to the sht31.isHeaterEnabled() further down
-    // the sketch hangs!!!!!!!    
-    debugPrintln("sensorsSetup() - ERROR - Failed");
-    sensor_sht31_status = BAD;
-  }
-  else
-  {
-    debugPrintln("sensorsSetup() - OK");
-    sensor_sht31_status = GOOD;
-    if (sht31.isHeaterEnabled())
-      debugPrintln("sensorsSetup() - Heater ENABLED");
-    else
-      debugPrintln("sensorsSetup() - Heater DISABLED");
-  }
+  sensor_sht31_status = BAD;
+  debugPrintln("sensorsSetup() - SHT31 initialising - FAKED and marked BAD - to help with this function hagining when sensor not connected or faulty");
+  // if (!sht31.begin(0x44)) // Set to 0x45 for alternate i2c addr
+  // {
+  //   // xxx - Even when the SHT31 is not connected, the begin still seems to respond true 
+  //   // and hence this code here does not get run! Whats worse is that if the sensor is disconnected
+  //   // and I guess if it is connected but failing, when we get to the sht31.isHeaterEnabled() further down
+  //   // the sketch hangs!!!!!!!    
+  //   debugPrintln("sensorsSetup() - ERROR - Failed");
+  //   sensor_sht31_status = BAD;
+  // }
+  // else
+  // {
+  //   debugPrintln("sensorsSetup() - OK");
+  //   sensor_sht31_status = GOOD;
+  //   if (sht31.isHeaterEnabled())
+  //     debugPrintln("sensorsSetup() - Heater ENABLED");
+  //   else
+  //     debugPrintln("sensorsSetup() - Heater DISABLED");
+  // }
   
 
   // setup ambient light sensor dome

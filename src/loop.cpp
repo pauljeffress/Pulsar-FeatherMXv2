@@ -15,7 +15,9 @@ void loop(void)
     // ==================
     while (true) // Stay in this state machine forever.
     {
-        // Update LED
+        // Execute any simple/quick housekeeping code that I want to run every time we change state
+
+        // Toggle LED to show we are running.
         digitalWrite(LED_BUILTIN, millis() % 500 > 250);
 
         // temporarily required until my 1sec Timer ISR is working
@@ -29,6 +31,7 @@ void loop(void)
                 timerIncrementer();
         }
 
+        // Run next state
         switch (main_state)
         {
         // ************************************************************************************************
@@ -92,13 +95,20 @@ void loop(void)
         // Check if the AGT has sent us a datum
         case RX_FROM_AGT:
             case_rx_from_agt();
-            // Next state is set within the above function as it varies.
+            main_state = PROCESS_AGT; // Set next state
             break;
 
         // ************************************************************************************************
         // process it if it has and set appropriate flags
         case PROCESS_AGT:
             case_process_agt();
+            main_state = PROCESS_AGT_FOR_AP; // Set next state
+            break;
+
+        // ************************************************************************************************
+        // process it if it has and set appropriate flags
+        case PROCESS_AGT_FOR_AP:
+            case_process_agt_for_ap();
             main_state = TX_TO_AGT; // Set next state
             break;
 
@@ -116,7 +126,6 @@ void loop(void)
             main_state = CHECK_POWER; // Set next state
             break;
 
-
         // ************************************************************************************************
         // DEFAULT - should not happen, but programing it defensively
         default:
@@ -124,8 +133,8 @@ void loop(void)
             main_state = CHECK_POWER; // get back on track by starting again with check_power state.
             break;
 
-        }   // End of switch(main_state)
+        } // End of switch(main_state)
 
-    }   // End of while(true)
+    } // End of while(true)
 
-}   // END - loop()
+} // END - loop()

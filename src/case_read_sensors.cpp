@@ -32,26 +32,26 @@ void case_read_sensors()
 
             if (!isnan(t))
             { // check if 'is not a number'
-                myFeatherMxSettings.FMX_TEMP = t * 100; // * 100 to store as correct units in Pulsar project.
+                myFmxSettings.FMX_TEMP = t * 100; // * 100 to store as correct units in Pulsar project.
                 //debugPrint("case_read_sensors() - Air Temp (degC): ");
                 //debugPrintlnFlt(t);
             }
             else
             {
-                myFeatherMxSettings.FMX_TEMP = 6666; // set to an obvious failed magic number
+                myFmxSettings.FMX_TEMP = 6666; // set to an obvious failed magic number
                 sensor_sht31_status = BAD;  // As soon as we detect an issue, stop using the device.
                 debugPrintln("case_read_sensors() - ERROR Air Temp sensor read failed");
             }
 
             if (!isnan(h))
             { // check if 'is not a number'
-                myFeatherMxSettings.FMX_RH = h * 100; // * 100 to store as correct units in Pulsar project.
+                myFmxSettings.FMX_RH = h * 100; // * 100 to store as correct units in Pulsar project.
                 //debugPrint("case_read_sensors() - Air Humidity (%): ");
                 //debugPrintlnFlt(h);
             }
             else
             {
-                myFeatherMxSettings.FMX_RH = 6666; // set to an obvious failed magic number
+                myFmxSettings.FMX_RH = 6666; // set to an obvious failed magic number
                 debugPrintln("case_read_sensors() - ERROR - Air Humidity sensor read failed");
             }
         }   // END - if (sensor_sht31_status)
@@ -68,13 +68,13 @@ void case_read_sensors()
             float tempC = sensors.getTempCByIndex(0); // We use the function ByIndex, and as an example get the temperature from the first sensor only.
             if (tempC != DEVICE_DISCONNECTED_C)       // check if its a valid reading
             {
-                myFeatherMxSettings.FMX_WATERTEMP = tempC * 100; // * 100 to store as correct units in Pulsar project.
+                myFmxSettings.FMX_WATERTEMP = tempC * 100; // * 100 to store as correct units in Pulsar project.
                 //debugPrint("case_read_sensors() - Water Temp (degC): ");
                 //debugPrintlnFlt(tempC);
             }
             else
             {
-                myFeatherMxSettings.FMX_WATERTEMP = 6666; // set to an obvious failed magic number
+                myFmxSettings.FMX_WATERTEMP = 6666; // set to an obvious failed magic number
                 sensor_ds18b20_status = BAD;  // As soon as we detect an issue, stop using the device.
                 debugPrintln("case_read_sensors() - ERROR - Water Temp sensor read failed");
             }
@@ -91,13 +91,13 @@ void case_read_sensors()
             float lux = myLux.lightStrengthLux();
             if (lux != DEVICE_DISCONNECTED_C) // check if its a valid reading
             {
-                myFeatherMxSettings.FMX_AMBIENTLIGHT = lux;
+                myFmxSettings.FMX_AMBIENTLIGHT = lux;
                 //debugPrint("case_read_sensors() - Ambient Light (Lux): ");
                 //debugPrintlnFlt(lux);
             }
             else
             {
-                myFeatherMxSettings.FMX_AMBIENTLIGHT = 6666; // set to an obvious failed magic number
+                myFmxSettings.FMX_AMBIENTLIGHT = 6666; // set to an obvious failed magic number
                 sensor_ambientlight_status = BAD; // As soon as we detect an issue, stop using the device.
                 debugPrintln("case_read_sensors() - ERROR - Ambient Light sensor read failed");
             }

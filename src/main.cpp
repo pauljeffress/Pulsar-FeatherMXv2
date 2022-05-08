@@ -30,15 +30,15 @@ Uart Serial3(&sercom3, 11, 12, SERCOM_RX_PAD_3, UART_TX_PAD_0);
 // SerialTransfer initialisation
 SerialTransfer STdriverF2A; // create a SerialTransfer entity for the Feather to AGT connection.
 
-
 /*============================*/
 /* Global Variables           */
 /*============================*/
-FeatherSharedSettings myFeatherSharedSettings; // My RAM copy of the settings I will share with the AGT
-AgtSharedSettings myAgtSharedSettings;         // My RAM copy of the setting the AGT has shared with me.
 
 // Action Flags
-bool flag_do_agt_tx = false; // Set when something wants the Feather to send it's sharedSettings to the AGT
+bool flag_tx_msg_to_agt = false;                    // Set when we know we need to send a message to the FMX.
+bool flag_got_msg_from_agt = false;                 // Set in rx_from_agt() IF we received a msg.
+bool flag_got_msg_from_agt_with_mission = false;    // Set in case_process_agt_for_ap() if we have a valid mission for teh AP.
+bool flag_tx_msg_to_ap = false;                     // Set when we know we need to send a message to the AP.
 
 // Sensor Status Flags
 bool sensor_sht31_status = BAD; // Do we think the sensor is available/working or not?
@@ -50,4 +50,4 @@ bool _printLog = false; // Flag to show if message field log printing is enabled
 Stream *_logSerial;     // The stream to send log messages to (if enabled)
 
 // Create and initialise main state machine vars.
-PULSAR_MAIN_SM_STATE  main_state = CHECK_POWER;         // we always start at this state.
+PULSAR_MAIN_SM_STATE main_state = CHECK_POWER; // we always start at this state.

@@ -5,7 +5,11 @@
     "cSpell.words": [
         "ADSB",
         "HWSTATUS",
+        "myAgtSettings",
         "pmmr",
-        "SAMD"
+        "RXAPINT",
+        "SAMD",
+        "TXAGTINT",
+        "unrequest"
     ]
 }

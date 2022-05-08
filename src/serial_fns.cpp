@@ -52,7 +52,7 @@ void serialSetup()
   /*
    * Serial1 - setup the serial port between Feather and Cube Orange port for MAVLink telemetry
    */  
-  Serial1.begin(57600); //RXTX from Telem Radio (Pins RX1 & TX1 on Feather M4)
+  Serial1.begin(57600); //RXTX from AP (Pins RX1 & TX1 on Feather M4)
   
   /*
    * Serial2 - setup the serial port between Feather & AGT for SatComms.

@@ -14,10 +14,9 @@
 void case_rx_from_autopilot()
 {
     // if its time to do a routine read of streamed AutoPilot MAVlink data?
-    if (seconds_since_last_ap_rx > myFeatherMxSettings.FMX_RXAPINT)
+    if (seconds_since_last_ap_rx > myFmxSettings.FMX_RXAPINT)
     {
-        debugPrintln(" ");
-        debugPrintln("case_rx_from_autopilot() - Time to execute.");
+        debugPrintln("\ncase_rx_from_autopilot() - Time to execute.");
 
         // Before trying to read from the streams we just ensure the 
         // AP is still streaming the messages we are going to look for.
@@ -37,7 +36,7 @@ void case_rx_from_autopilot()
 
         // Do a bulk collection of data from the streamed messages
 
-        debugPrint("case_rx_from_autopilot() - ATTEMPTING RX - starting at Millis:"); Serial.println(millis());
+        //debugPrint("case_rx_from_autopilot() - ATTEMPTING RX - starting at Millis:"); Serial.println(millis());
         // Explanation of the following while() loop
         // I need to ensure that the mavlink_receive() function gets a solid couple of contiguous
         // seconds to ensure it gets a good chance to snap up lots of mavlink data and form packets.
@@ -49,11 +48,12 @@ void case_rx_from_autopilot()
         // me multiple chances to catch what I need in the mavlink stream.
         // Also, as I am concerned about this while loop playing up when millis() rolls over to zero, 
         // I am using the extra "&& (millis() > 4000)" in the while() to jump that bit close to 0.
+        // xxx - AS PER https://techexplorations.com/guides/arduino/programming/millis-rollover/ I can simplify the below.
         uint32_t start = millis();  // xxx - need to review how I'm timing this loop...seems clunky. Also need to take any contants and set the as #defines.
         while ((millis() < (start + 3000)) && (millis() > 4000))  // For 3 seconds, see if we can assemble received msgs and if so process them.
             mavlink_receive(); 
         seconds_since_last_ap_rx = 0;    // reset counter
-        debugPrint("case_rx_from_autopilot() - Done RX - ending at Millis:"); Serial.println(millis());
+        //debugPrint("case_rx_from_autopilot() - Done RX - ending at Millis:"); Serial.println(millis());
 
         // At this point I should have gathered all of the data I needed from the streaming params, 
         // so we should turn them all back off and leave the MAVLink serial connection relatively quiet.
@@ -63,6 +63,7 @@ void case_rx_from_autopilot()
 
         // xxx - I have not done this "see what we got..."
 
+        debugPrintln("case_rx_from_autopilot() - Complete.");
     }
     else
     {
