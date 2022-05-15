@@ -18,7 +18,7 @@ void case_process_agt_for_ap()
 
     if (flag_got_msg_from_agt)
     {
-        debugPrintln("case_process_agt_for_ap() - starting as flag_got_msg_from_agt == true");
+        debugPrintln("\ncase_process_agt_for_ap() - starting as flag_got_msg_from_agt == true");
         flag_tx_msg_to_ap = true;   // everytime we get a message from the AGT we set this flag,
                                     // because we want the subsequent tx to ap function to look at the
                                     // info we received from the AGT and determine if it needs to action 

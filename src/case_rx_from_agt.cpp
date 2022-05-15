@@ -32,7 +32,7 @@ void case_rx_from_agt()
     uint8_t numavail = STdriverF2A.available();
     if (numavail > 0)
     {
-        debugPrint("case_rx_from_agt() - ST num chars avail:"); debugPrintlnInt(numavail);
+        debugPrint("\ncase_rx_from_agt() - ST num chars avail:"); debugPrintlnInt(numavail);
     }
 
     if(numavail > (numbytesexpected - 1))  //  (sizeof(myAgtSharedSettings)-1)) i.e only proceed if the full ST blob is available for us to collect.

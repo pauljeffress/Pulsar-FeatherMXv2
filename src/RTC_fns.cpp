@@ -55,6 +55,8 @@ void RTCSetup()
  */
 void RTCPrintCurrentTime()
 {
+    debugPrint("RTCPrintCurrentTime() - ");
+    
     DateTime now = rtc.now();
 
     Serial.print(now.year(), DEC);

@@ -73,5 +73,5 @@ void setup()
                             // the AGT will decide what to do with it.  
     main_state = CHECK_POWER;    // Ensure main state machine starts at correct first step.
     
-    debugPrintln("setup() - complete.");
+    debugPrintln("setup() - Complete");
 } // END - setup()

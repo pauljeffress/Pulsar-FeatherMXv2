@@ -66,28 +66,6 @@ void loop(void)
         // Send a MAVLink HEARTBEAT to the Autopilot.
         case HEARTBEAT_TO_AP:
             case_heartbeat_to_autopilot();
-            main_state = RX_FROM_AP; // Set next state
-            break;
-
-        // ************************************************************************************************
-        // Read any streamed params from the Autopilot that I need.
-        // Note: this procedure also IMPORTANTLY receives & records HEARTBEATS from AP.
-        case RX_FROM_AP:
-            case_rx_from_autopilot();
-            main_state = PROCESS_AP; // Set next state
-            break;
-
-        // ************************************************************************************************
-        // Review/action the recently received Mavlink data from the Autopilot.
-        case PROCESS_AP:
-            case_process_autopilot();
-            main_state = TX_TO_AP; // Set next state
-            break;
-
-        // ************************************************************************************************
-        // Send Mavlink data to the autopilot.
-        case TX_TO_AP:
-            case_tx_to_autopilot();
             main_state = RX_FROM_AGT; // Set next state
             break;
 
@@ -109,6 +87,28 @@ void loop(void)
         // process it if it has and set appropriate flags
         case PROCESS_AGT_FOR_AP:
             case_process_agt_for_ap();
+            main_state = TX_TO_AP; // Set next state
+            break;
+
+        // ************************************************************************************************
+        // Send Mavlink data to the autopilot.
+        case TX_TO_AP:
+            case_tx_to_autopilot();
+            main_state = RX_FROM_AP; // Set next state
+            break;
+
+        // ************************************************************************************************
+        // Read any streamed params from the Autopilot that I need.
+        // Note: this procedure also IMPORTANTLY receives & records HEARTBEATS from AP.
+        case RX_FROM_AP:
+            case_rx_from_autopilot();
+            main_state = PROCESS_AP; // Set next state
+            break;
+
+        // ************************************************************************************************
+        // Review/action the recently received Mavlink data from the Autopilot.
+        case PROCESS_AP:
+            case_process_autopilot();
             main_state = TX_TO_AGT; // Set next state
             break;
 

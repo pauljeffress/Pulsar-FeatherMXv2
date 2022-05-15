@@ -18,7 +18,7 @@ void case_tx_to_agt()
     // if its time to do a routine send (worst case sync method) OR something else has flagged that we should do it then
     if ((seconds_since_last_agt_tx > myFmxSettings.FMX_TXAGTINT) or (flag_tx_msg_to_agt))
     {
-        debugPrintln("\ncase_tx_to_agt() - Time to execute");
+        debugPrintln("\ncase_tx_to_agt() - Starting");
 
         loadupFmxSharedSettings();  // refresh all parameters in myFmxSharedSettings.
         setFmxSharedSettingNextMagicnum();  // update the MAGICNUM in myFmxSharedSettings.
@@ -51,7 +51,7 @@ void case_tx_to_agt()
                                     // xxx - do I need to put a limit on num retries, so this doesn't keep getting tried forever.
         }
         
-        debugPrintln("case_tx_to_agt() - finished");
+        debugPrintln("case_tx_to_agt() - Complete");
     }
     else
     {

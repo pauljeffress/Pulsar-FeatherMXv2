@@ -81,7 +81,7 @@
 /// Various Timers
 #define SENSORPERIODSECONDS             120 // seconds - how often should we read the sensors?
 #define MAVLINKHEARTBEATPERIODSECONDS   20  // seconds - how often should we send a MAVLink HEARTBEAT to the AutoPilot
-#define TX_TO_AP_PERIOD_SECONDS         120  // seconds - how often should we do periodic TX to AutoPilot
+#define TX_TO_AP_PERIOD_SECONDS         600  // seconds - how often should we do periodic TX to AutoPilot
 
 // Debugs
 #define RX_FROM_AGT_DEBUG   // uncomment if you want the case_rx_from_agt() function to execute its debugPrint... statements

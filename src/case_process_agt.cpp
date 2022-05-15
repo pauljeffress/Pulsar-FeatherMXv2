@@ -16,7 +16,7 @@ void case_process_agt()
 
     if (flag_got_msg_from_agt)
     {
-        debugPrintln("case_process_agt() - starting as flag_got_msg_from_agt == true");
+        debugPrintln("\ncase_process_agt() - starting as flag_got_msg_from_agt == true");
         
         // Start with some basic checks on the recently received myAgtSharedSettings
         if (myAgtSharedSettings.AGT_ACK_FOR_FMX)    // don't process it if its an ACK msg
