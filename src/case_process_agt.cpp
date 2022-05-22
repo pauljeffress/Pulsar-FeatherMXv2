@@ -47,7 +47,10 @@ void case_process_agt()
             // recent myAgtSharedSettings msg here. We do it in next STATE, case_process_agt_for_ap().
         }
         else
+        {
+            flag_got_msg_from_agt = false;  // clear this flasg as we don't want any further processing of the packet.
             debugPrintln("case_process_agt() - ERROR - RX'd msg failed some checks, so NOT processing it");
+        }
         debugPrintln("case_process_agt() - Complete");
     }
 }

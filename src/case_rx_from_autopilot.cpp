@@ -20,13 +20,16 @@ void case_rx_from_autopilot()
     // if its time to do a routine or on demand read of streamed AutoPilot MAVlink data?
     if ((seconds_since_last_ap_rx > myFmxSettings.FMX_RXAPINT) || flag_tx_msg_to_agt)
     {
-        debugPrintln("\ncase_rx_from_autopilot() - Starting");
-        seconds_since_last_ap_rx = 0;    // reset counter
+        debugPrint("\ncase_rx_from_autopilot() - Starting");
+        debugPrint(" - due to:");
+        if (flag_tx_msg_to_agt) debugPrintln("flag_tx_msg_to_agt=TRUE");
+        else debugPrintln("seconds_since_last_ap_rx > myFmxSettings.FMX_RXAPINT");
+
 
         // Before trying to read from the streams we just ensure the 
         // AP is still streaming the messages we are going to look for.
-        // Streaming may have been turned off for some reason (via GCS, FMX etc), so we just make sure
-        // it is still/back on.
+        // Streaming may have been turned off for some reason (via GCS, FMX etc, 
+        // or AP may have reset/power-cycled), so we just make sure it is still/back on.
         mavlink_request_streaming_params_from_ap();
 
 
@@ -68,14 +71,8 @@ void case_rx_from_autopilot()
 
         // xxx - I have not done this "see what we got..."
         debugPrintln("case_rx_from_autopilot() - xxx - MORE CODE NEEDED.");
-
+        
+        seconds_since_last_ap_rx = 0;    // reset counter here at the end of the process.
         debugPrintln("case_rx_from_autopilot() - Complete");
     }
-    else
-    {
-        #ifdef MAVLINK_DEBUG 
-            //debugPrintln("case_rx_from_autopilot() - NOT NOW");
-        #endif
-    }
-
-}
+}   // END - case_rx_from_autopilot()

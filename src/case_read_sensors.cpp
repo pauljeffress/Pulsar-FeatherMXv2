@@ -38,7 +38,7 @@ void case_read_sensors()
             }
             else
             {
-                myFmxSettings.FMX_TEMP = 6666; // set to an obvious failed magic number
+                myFmxSettings.FMX_TEMP = 6666; // set to an obvious failed number
                 sensor_sht31_status = BAD;  // As soon as we detect an issue, stop using the device.
                 debugPrintln("case_read_sensors() - ERROR Air Temp sensor read failed");
             }
@@ -51,7 +51,7 @@ void case_read_sensors()
             }
             else
             {
-                myFmxSettings.FMX_RH = 6666; // set to an obvious failed magic number
+                myFmxSettings.FMX_RH = 6666; // set to an obvious failed number
                 debugPrintln("case_read_sensors() - ERROR - Air Humidity sensor read failed");
             }
         }   // END - if (sensor_sht31_status)
@@ -74,7 +74,7 @@ void case_read_sensors()
             }
             else
             {
-                myFmxSettings.FMX_WATERTEMP = 6666; // set to an obvious failed magic number
+                myFmxSettings.FMX_WATERTEMP = 6666; // set to an obvious failed number
                 sensor_ds18b20_status = BAD;  // As soon as we detect an issue, stop using the device.
                 debugPrintln("case_read_sensors() - ERROR - Water Temp sensor read failed");
             }
@@ -97,7 +97,7 @@ void case_read_sensors()
             }
             else
             {
-                myFmxSettings.FMX_AMBIENTLIGHT = 6666; // set to an obvious failed magic number
+                myFmxSettings.FMX_AMBIENTLIGHT = 6666; // set to an obvious failed number
                 sensor_ambientlight_status = BAD; // As soon as we detect an issue, stop using the device.
                 debugPrintln("case_read_sensors() - ERROR - Ambient Light sensor read failed");
             }

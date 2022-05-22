@@ -5,7 +5,12 @@
     "cSpell.words": [
         "ADSB",
         "HWSTATUS",
+        "MAGICNUM",
+        "mavlink",
+        "millis",
         "myAgtSettings",
+        "numbytessent",
+        "NUMTRIES",
         "pmmr",
         "RXAPINT",
         "SAMD",

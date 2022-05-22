@@ -72,16 +72,19 @@
 // DS18B20 sensor - Data wire is plugged into port 2 on the Arduino
 #define ONE_WIRE_BUS 4
 
-
 // 12v switched power outputs
 #define PI_PWR_PIN              23 // The pin the FMX controls the power supply to the Pi on.
 #define STROBE_LIGHT_PWR_PIN    24 // The pin the FMX controls the power supply to the Strobe light on.
 #define POWER_FEATHER_PWR_PIN   25 // The pin the FMX controls the power supply to the Power Feather on.
 
 /// Various Timers
-#define SENSORPERIODSECONDS             120 // seconds - how often should we read the sensors?
-#define MAVLINKHEARTBEATPERIODSECONDS   20  // seconds - how often should we send a MAVLink HEARTBEAT to the AutoPilot
-#define TX_TO_AP_PERIOD_SECONDS         600  // seconds - how often should we do periodic TX to AutoPilot
+#define SENSORPERIODSECONDS             120     // seconds - how often should we read the sensors?
+#define MAVLINKHEARTBEATPERIODSECONDS   20      // seconds - how often should we send a MAVLink HEARTBEAT to the AutoPilot
+//#define TX_TO_AP_PERIOD_SECONDS       600     // seconds - how often should we do periodic TX to AutoPilot
+#define FIRST_TX_TO_AGT_WAIT_S (10 * 60)         // seconds - how long to wait til doing first TX to AGT
+
+// Retry Counters
+#define FMX_TX_TO_AGT_NUMTRIES_MAX      4   // how many times should the FMX try to send to the AGT before giving up for now.
 
 // Debugs
 #define RX_FROM_AGT_DEBUG   // uncomment if you want the case_rx_from_agt() function to execute its debugPrint... statements
@@ -127,6 +130,8 @@ extern bool flag_tx_msg_to_agt;
 extern bool flag_got_msg_from_agt;
 extern bool flag_got_msg_from_agt_with_mission;
 extern bool flag_tx_msg_to_ap;
+extern bool flag_do_first_agt_tx;
+extern bool flag_first_agt_tx;
 
 extern bool sensor_sht31_status;
 extern bool sensor_ambientlight_status;
@@ -138,6 +143,10 @@ extern Stream *_logSerial;
 extern PULSAR_MAIN_SM_STATE  main_state;
 
 extern GlobalMission_t global_mission;
+
+extern uint8_t fmx_tx_to_agt_numtries;
+
+extern long lastsec1;
 
 /*============================*/
 /* Function Predefines        */

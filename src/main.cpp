@@ -39,6 +39,9 @@ bool flag_tx_msg_to_agt = false;                    // Set when we know we need 
 bool flag_got_msg_from_agt = false;                 // Set in rx_from_agt() IF we received a msg.
 bool flag_got_msg_from_agt_with_mission = false;    // Set in case_process_agt_for_ap() if we have a valid mission for teh AP.
 bool flag_tx_msg_to_ap = false;                     // Set when we know we need to send a message to the AP.
+bool flag_do_first_agt_tx = true;   // tells the us to do one initial TX to AGT shortly after boot.
+bool flag_first_agt_tx = false;     // tells the us to do one initial TX to AGT shortly after boot.
+
 
 // Sensor Status Flags
 bool sensor_sht31_status = BAD; // Do we think the sensor is available/working or not?
@@ -51,3 +54,8 @@ Stream *_logSerial;     // The stream to send log messages to (if enabled)
 
 // Create and initialise main state machine vars.
 PULSAR_MAIN_SM_STATE main_state = CHECK_POWER; // we always start at this state.
+
+// Retry Counters
+uint8_t fmx_tx_to_agt_numtries = 0;
+
+long lastsec1 = 0;    // counter for my every Xsec debug prints.

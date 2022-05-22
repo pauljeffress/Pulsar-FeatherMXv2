@@ -49,42 +49,56 @@ void case_tx_to_autopilot()
 
 
         /*
-         * Check and action SET_AP_PARAM commands.
-         * =======================================
+         * Check and action SET_AP_PARAM commands from Ground.
+         * ===================================================
          */
-        if (myAgtSharedSettings.set_ap_param_paramvaluetype1)   // If anything but zero then go ahead and SET the param,
-                                                                // as type = 0 indicates the Ground has not populated
-                                                                // this SET_AP_PARAM command.
+        if ((myAgtSharedSettings.set_ap_param_paramvaluetype1 != 0) && (myAgtSharedSettings.set_ap_param_paramname1 != ""))      
+                                        // If set_ap_param_paramvaluetype == 0 that means this the Ground
+                                        // has not populated this request, se we take no action.
+                                        // Likewise, we double check myAgtSharedSettings.set_ap_param_paramname1 != ""
+                                        // and also abort if it is empty.
         {
-             debugPrintln("case_tx_to_autopilot() - setting ap param 1 - NOT FULLY CODED YET!");
+             debugPrintln("case_tx_to_autopilot() - setting ap param 1");
              result = mavlink_set_one_param_on_ap(myAgtSharedSettings.set_ap_param_paramname1,
                                      myAgtSharedSettings.set_ap_param_paramvalue_int1,
                                      myAgtSharedSettings.set_ap_param_paramvalue_float1,
                                      myAgtSharedSettings.set_ap_param_paramvaluetype1);  
         
-            if (result) // i.e we did send cmd to AP (it may not have received or actioned it though...we don't know yet)
+            if (result) // i.e we successfully set the param on the AP and verified it.
             {
-                // do a get AP PARAM and confirm the GOT value = the SET value,
-
-
-
-
-                
-                //    then either copy the GOT value into myFmxSharedSettings or just set a boolean in myFmxSharedSettings
+                debugPrintln("case_tx_to_autopilot() - setting ap param 1 - SUCCESS");
+                myFmxSettings.AP_SET_PARAM1_RESULT = result;   // set response from Boat to Ground accordingly
             }
-
-            //     xxx - copy result into correct myFmxSharedSettings field for return to Agt/Ground 
-            //           to report on success/failure of 1st set param command.
-            //           and also set flag that we have something to send to AGT/Ground.
-
+            else
+            {
+                debugPrintln("case_tx_to_autopilot() - setting ap param 1 - FAILED");
+                myFmxSettings.AP_SET_PARAM1_RESULT = result;   // set response from Boat to Ground accordingly
+            }
         }
 
         // do the same as above but for PARAM2
-        if (myAgtSharedSettings.set_ap_param_paramvaluetype2)   // If anything but zero then go ahead and SET the param,
-                                                                // as type = 0 indicates the Ground has not populated
-                                                                // this SET_AP_PARAM command.
+        if ((myAgtSharedSettings.set_ap_param_paramvaluetype2 != 0) && (myAgtSharedSettings.set_ap_param_paramname2 != ""))      
+                                        // If set_ap_param_paramvaluetype == 0 that means this the Ground
+                                        // has not populated this request, se we take no action.
+                                        // Likewise, we double check myAgtSharedSettings.set_ap_param_paramname1 != ""
+                                        // and also abort if it is empty.
         {
-             debugPrintln("case_tx_to_autopilot() - setting ap param 2 - xxx NOT CODED YET!");
+             debugPrintln("case_tx_to_autopilot() - setting ap param 2");
+             result = mavlink_set_one_param_on_ap(myAgtSharedSettings.set_ap_param_paramname2,
+                                     myAgtSharedSettings.set_ap_param_paramvalue_int2,
+                                     myAgtSharedSettings.set_ap_param_paramvalue_float2,
+                                     myAgtSharedSettings.set_ap_param_paramvaluetype2);  
+        
+            if (result) // i.e we successfully set the param on the AP and verified it.
+            {
+                debugPrintln("case_tx_to_autopilot() - setting ap param 2 - SUCCESS");
+                myFmxSettings.AP_SET_PARAM2_RESULT = result;   // set response from Boat to Ground accordingly
+            }
+            else
+            {
+                debugPrintln("case_tx_to_autopilot() - setting ap param 2 - FAILED");
+                myFmxSettings.AP_SET_PARAM2_RESULT = result;   // set response from Boat to Ground accordingly
+            }
         }
 
 
@@ -281,18 +295,17 @@ void case_tx_to_autopilot()
 
 
 
-
-    // Is it time to do a periodic TX to the AutoPilot?
-    // Note: If we did a TX to the AP above due to new AP data from the AGT, then this periodic TX 
-    //       will get skipped as seconds_since_last_ap_tx will have just been reset.
-    if (seconds_since_last_ap_tx > TX_TO_AP_PERIOD_SECONDS)
-    {
-        debugPrintln("\ncase_tx_to_autopilot() - Starting periodic TX to AP section - xxx YET TO CODE THIS!");
-        seconds_since_last_ap_tx = 0;   // reset timer.
-        //do_periodic_tx_to_ap();   // xxx - yet to code
-        debugPrintln("case_tx_to_autopilot() - Completed periodic TX to AP section");
-
-    }
+    // I have commented out the below as I no longer see a need to do this.
+    // // Is it time to do a periodic TX to the AutoPilot?
+    // // Note: If we did a TX to the AP above due to new AP data from the AGT, then this periodic TX 
+    // //       will get skipped as seconds_since_last_ap_tx will have just been reset.
+    // if (seconds_since_last_ap_tx > TX_TO_AP_PERIOD_SECONDS)
+    // {
+    //     debugPrintln("\ncase_tx_to_autopilot() - Starting periodic TX to AP section - xxx YET TO CODE THIS!");
+    //     seconds_since_last_ap_tx = 0;   // reset timer.
+    //     //do_periodic_tx_to_ap();   // xxx - yet to code
+    //     debugPrintln("case_tx_to_autopilot() - Completed periodic TX to AP section");
+    // }
     
     
 }   // END - case_tx_to_autopilot()

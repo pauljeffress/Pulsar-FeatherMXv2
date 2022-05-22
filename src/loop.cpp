@@ -31,6 +31,13 @@ void loop(void)
                 timerIncrementer();
         }
 
+        // print a seconds count every 30 secs when idling around this while loop....makes visual troubleshooting easier :)
+        if (seconds_since_reset_or_powercycle > (lastsec1 + 29))
+        {
+            lastsec1 = seconds_since_reset_or_powercycle;
+            Serial.print("loop() - seconds_since_reset_or_powercycle=");Serial.println(seconds_since_reset_or_powercycle);
+        }
+
         // Run next state
         switch (main_state)
         {
