@@ -45,17 +45,17 @@ void case_tx_to_agt()
         setFmxSharedSettingNextMagicnum();  // update the MAGICNUM in myFmxSharedSettings.
         printFmxSharedSettings();
         
+        turn_on_agt_activate_pin(); // signal the TPL5110 to power up the AGT, we want to send something to it!
+        
         while ((fmx_tx_to_agt_numtries < FMX_TX_TO_AGT_NUMTRIES_MAX) && (!result))  // Try to TX to AGT til successful or retries counts out.
         {
             fmx_tx_to_agt_numtries++;
             debugPrint("case_tx_to_agt() - TX try number:");debugPrintlnInt(fmx_tx_to_agt_numtries);
             
-            set_agt_activate_pin(); // power up the AGT, we want to send something to it!
-
             if (seconds_since_last_ap_rx > 30)  // if we don't have recent data from the AP, go get it before we TX to the AGT.
                 case_rx_from_autopilot();
 
-            result = wait_agt_rx_ready_pin();   // is the AGT ready to receive a message from us?
+            result = wait_agt_rx_ready_pin();   // is the AGT powered up and ready to receive a message from us?
 
             if (result) // there is no point doing the below if AGT is not ready.
             {
@@ -84,7 +84,8 @@ void case_tx_to_agt()
                                                 // duration has passed.
         }
         
-        clear_agt_activate_pin(); // allow the AGT Power Timer to shutdown the AGT if it wants to.
+        turn_off_agt_activate_pin(); // allow the TPL5110 to turn off the AGT when its ready.
+        
         debugPrintln("case_tx_to_agt() - Complete");
     }
 

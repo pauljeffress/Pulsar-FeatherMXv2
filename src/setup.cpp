@@ -4,6 +4,7 @@
 
 #include "global.h"
 
+
 /*============================
  * setup()
  *
@@ -11,36 +12,39 @@
  ============================*/
 void setup()
 {
+    delay(5000); // Give me time to get Serial Monitor open if need be.     xxx
+    
+    Wire.begin();   // get I2C port ready for subsequent users (OLED, RTC etc)
+
     myCANid = CBP_CANID_FEATHERMX; // Set myCANid based on defines in CBP.h
 
     setupPins(); // initialise all GPIOs    
     
-    digitalWrite(LED_BUILTIN, HIGH);
-    delay(1000);
-    digitalWrite(LED_BUILTIN, LOW);
-    delay(1000);
-    digitalWrite(LED_BUILTIN, HIGH);
-    delay(1000);
-    digitalWrite(LED_BUILTIN, LOW);
-    delay(1000);
-    digitalWrite(LED_BUILTIN, HIGH);
-    delay(1000);
-    digitalWrite(LED_BUILTIN, LOW);
-    delay(1000);
-    digitalWrite(LED_BUILTIN, HIGH);
-    delay(1000);
-    digitalWrite(LED_BUILTIN, LOW);
-    delay(1000);    
+    OLEDMiniSetup();
+    oled.println("    ---  FMX   ---");
+    oled.println("setup() - underway");
+
+
+    for (int x = 0; x < 5; x++)
+    {
+        digitalWrite(LED_BUILTIN, HIGH);
+        delay(500);
+        digitalWrite(LED_BUILTIN, LOW);
+        delay(500);
+    }
     
     disableDebugging(); // Make sure the serial debug messages are disabled until the Serial port is open ( see loop_init() )!
     disableLogging(); // Make sure the serial logging messages (to OLA) are disabled until the Serial port is open ( see loop_init() )! 
+
     serialSetup();  // Setup all Serial ports   
+
     enableDebugging(Serial); // THIS LINE IS RIGHT HERE FOR A REASON. Because we re issue Serial.begin() for the console/debug port
                              // just a few lines earlier here in serialSetup(), you need to enable the debug stuff that uses it
                              // after you have done that.  For more info see case_zzz(), and you will see it explicitly does a
                              // Serial.end(); before putting the processor to sleep.
                              // Uncomment this line to enable extra debug messages to Serial    
-    
+
+
     debugPrintln("================================================");
     debugPrintln("************************************************");
     debugPrintln("================================================");
@@ -59,11 +63,11 @@ void setup()
     initTFTFeatherInternalSettings();
     initPowerFeatherSettings();
     initMAVLinkSettings();  
-    
-    RTCSetup(); 
+
+    RTCSetup(&Wire);
     CANStatus = CANSetup();     
-    timerSetup();   
-    actuatorsSetup();   
+    timerSetup();  
+    actuatorsSetup();  
     sensorsSetup(); 
     
     mavlink_unrequest_streaming_params_from_ap(); // I am trying to initially hush the AutoPilot (see my other mavlink stuff for explanation)   
@@ -72,6 +76,9 @@ void setup()
                             // Feather to AGT  blob of data to the AGT, and
                             // the AGT will decide what to do with it.  
     main_state = CHECK_POWER;    // Ensure main state machine starts at correct first step.
-    
+
+
+    oled.println("setup() - Complete");
+
     debugPrintln("setup() - Complete");
 } // END - setup()

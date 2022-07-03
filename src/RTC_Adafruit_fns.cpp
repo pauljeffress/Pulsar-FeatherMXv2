@@ -1,17 +1,17 @@
 /*
- * RTC_fns.cpp
+ * RTC_Adafruit_fns.cpp
  * 
  * Functions that use the external DS3231 RTC module over I2C.
  * 
  * 
  */
 
-#include "global.h"
-#include "RTC_fns.h"
+
+#include "RTC_Adafruit_fns.h"
 
 // Globals
 RTC_DS3231 rtc;
-bool RTC_status = BAD;  
+bool RTC_status = false;  
 char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
 
@@ -21,32 +21,34 @@ char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursd
  * Attempt to initialise the rtc object, and also check if it has lost power previously.
  * Then set global var RTC_status accordingly.
  */
-void RTCSetup()
+void RTCSetup(TwoWire *wireInstance)
 {
-    Serial.println("setupRTC() - Starting.");
-    if (! rtc.begin()) 
+    // Not sure if we are assuming that the requested Wire port has been "Wire.begin()" already, perhaps in setup()
+    
+    Serial.println("RTCSetup() - Starting.");
+    if (! rtc.begin(wireInstance)) 
     {
-        Serial.println("setupRTC() - ERROR - Couldn't find RTC");
-        RTC_status = BAD;
+        Serial.println("RTCSetup() - ERROR - Couldn't find RTC");
+        RTC_status = false;
         delay(5000);
     }
     else
     {
-        Serial.println("setupRTC() - RTC found ok");
+        Serial.println("RTCSetup() - RTC found ok");
         if (rtc.lostPower()) 
         {
-            Serial.println("setupRTC() - ERROR - RTC lost power!");
-            RTC_status = BAD;
+            Serial.println("RTCSetup() - ERROR - RTC lost power!");
+            RTC_status = false;
             delay(5000);
         }
         else
         {
-            Serial.println("setupRTC() - RTC time ok");
+            Serial.println("RTCSetup() - RTC time ok");
             RTCPrintCurrentTime();
-            RTC_status = GOOD;
+            RTC_status = true;
         }
     }
-    Serial.println("setupRTC() - Complete.");
+    Serial.println("RTCSetup() - Complete.");
 }   // END - RTCsetup()
 
 /*
@@ -55,7 +57,7 @@ void RTCSetup()
  */
 void RTCPrintCurrentTime()
 {
-    debugPrint("RTCPrintCurrentTime() - ");
+    Serial.print("RTCPrintCurrentTime() - ");
     
     DateTime now = rtc.now();
 

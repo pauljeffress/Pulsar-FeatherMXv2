@@ -3,7 +3,9 @@
         "cmath": "cpp"
     },
     "cSpell.words": [
+        "Adafruit",
         "ADSB",
+        "datasheet",
         "HWSTATUS",
         "MAGICNUM",
         "mavlink",
@@ -11,7 +13,9 @@
         "myAgtSettings",
         "numbytessent",
         "NUMTRIES",
+        "OLED",
         "pmmr",
+        "powercycle",
         "RXAPINT",
         "SAMD",
         "TXAGTINT",

@@ -23,7 +23,7 @@
 extern bool RTC_status;
 
 /* function pre defines */
-void RTCSetup();
+void RTCSetup(TwoWire *wireInstance);
 void RTCPrintCurrentTime();
 
 #endif

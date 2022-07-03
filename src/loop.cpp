@@ -36,6 +36,8 @@ void loop(void)
         {
             lastsec1 = seconds_since_reset_or_powercycle;
             Serial.print("loop() - seconds_since_reset_or_powercycle=");Serial.println(seconds_since_reset_or_powercycle);
+            oled.print("secs-boot: ");   
+            oled.println(seconds_since_reset_or_powercycle);
         }
 
         // Run next state

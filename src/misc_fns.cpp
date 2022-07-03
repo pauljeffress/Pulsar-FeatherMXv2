@@ -23,9 +23,10 @@ void setupPins()
     digitalWrite(POWER_FEATHER_PWR_PIN, LOW);
 
     // AGT control/monitoring pins
-    pinMode(AGT_ACTIVATE_PIN, OUTPUT);
-    digitalWrite(AGT_ACTIVATE_PIN, LOW);
-    pinMode(AGT_RX_READY_PIN, INPUT);
+    pinMode(AGT_RX_READY_PIN, INPUT);  
+    pinMode(FMX_TURN_AGT_ON_PIN, OUTPUT);       // See comments at turn_on_agt_activate_pin() for explanation.
+    digitalWrite(FMX_TURN_AGT_ON_PIN, LOW);      // See comments at turn_on_agt_activate_pin() for explanation.
+
 }
 
 // Because Arduino print can't handle uint64_t I found this here https://forum.arduino.cc/t/printing-uint64_t/364646
@@ -57,19 +58,64 @@ String my64toString(uint64_t x)
 }
 
 /*
- *  Functions to control the signal/PIN to powerup the AGT
- */
-void set_agt_activate_pin()
+ *  Functions to control the signal/PIN to power-up the AGT via the TPL5110 Nano Power Timer module
+ *
+ *   FMX_TURN_AGT_ON_PIN is connected to DELAY pin on TPL5110 Power Timer that 
+ *   controls the AGT power. 
+ * 
+ *   Turn On
+ *   =======
+ *   To turn the AGT on via the TPL5110, the FMX must first set this pin HIGH and only
+ *   then configure it as an OUTPUT.  The order is important!
+ *   It must hold it in this state for about 1 second, for the TPL5110 to trigger.
+ *   That will trigger the TPL5110 to turn on its output and this PIN can now be returned
+ *   to an "off state" (see below how to do this correctly) and the TPL5110 will keep the AGT
+ *   powered on until either
+ *   (a) it sees its DONE pin go HIGH from the AGT, signalling the AGT is ready to be powered down
+ *   OR 
+ *   (b) if the TPL5110 timer expires (i.e. the AGT stayed on longer than the TPL5110 timer period) 
+ *   then the TPL5110 will disconnect, pause for a fraction of 1 second and then reconnect power.  That will cause
+ *   the AGT to reboot. Which is helpful as it acts as an external watchdog on the AGT in case it hangs.
+ * 
+ *   Leave On
+ *   ========
+ *   Because the AGT can be turned on by the FMX signalling the TPL5110 (as per above) OR the TPL5110 can 
+ *   independently turn on the AGT if the TPL5110 timer expires, we need the AGT to be able to tell why it
+ *   was turned on.  That way it can either operate independently and just send a message to Ground etc, OR if 
+ *   it was the FMX that turned it on, then it knows to listen to the FMX etc etc.
+ *   The way the AGT knows why it was turned on is by checking the FMX_TURN_AGT_ON_PIN which is driven by the FMX,
+ *   and connected to the TPL5110 AND the AGT.  So the AGT can read that pin shortly after booting and if its HIGH, 
+ *   then it knows the FMX turned it on.
+ *   So, while the TPL only needs the FMX_TURN_AGT_ON_PIN pulled high for a second, we actually should leave
+ *   it HIGH for long enough for the AGT to check it, before we return it to its Off State (see below) 
+ * 
+ *   Off State (High-Z)
+ *   =========
+ *   When not in use, i.e. when the FMX is not actively signaling to the TPL5110
+ *   to turn on the AGT, this pin must be left in HIGH-Z state. Thats why we
+ *   configure it as INPUT, LOW until we need to actually use it. 
+ *   Note: When an INPUT pin is set to LOW, it switches off any internal pullups.  This is important.
+ *   DO NOT SET as OUTPUT & LOW! Return it to INPUT state, then turn it LOW.
+ *   See my Evernote about the details of this.
+ */   
+
+// signal the TPL5110 to power up the AGT
+void turn_on_agt_activate_pin()
 {
-    digitalWrite(AGT_ACTIVATE_PIN, HIGH);
+    digitalWrite(FMX_TURN_AGT_ON_PIN, HIGH);    
+    pinMode(FMX_TURN_AGT_ON_PIN, OUTPUT);
 }
 
-void clear_agt_activate_pin()
+// allow the TPL5110 to turn off the AGT when its ready.
+void turn_off_agt_activate_pin()
 {
-    digitalWrite(AGT_ACTIVATE_PIN, LOW);
+    pinMode(FMX_TURN_AGT_ON_PIN, INPUT);
+    digitalWrite(FMX_TURN_AGT_ON_PIN, LOW); // not strictly required, but its what I had in my TPL5110 test code so I'm sticking with it. 
 }
 
-bool wait_agt_rx_ready_pin()
+
+
+bool wait_agt_rx_ready_pin()    // Check for max AGT_RX_READY_PIN_WAIT_TIME_S seconds for pin to be high.
 {
     bool result = false;   // track success/failure of waiting to see agt_rx_ready_pin come HIGH.
     bool timedOut = false; // track when we have timed out.

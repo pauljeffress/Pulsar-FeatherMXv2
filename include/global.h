@@ -40,6 +40,8 @@
 
 #include "setFmx_fns.h" // one of mine.
 #include "misc_fns.h"   // one of mine.
+#include "RTC_Adafruit_fns.h"   // one of mine.
+#include "OLED_mini_fns.h"   // one of mine.
 
 
 // Includes from various stuff I need from Pulsar_Shared_Source
@@ -58,15 +60,14 @@
 #include "FmxSettings_fns.h"
 #include "SharedAgtFmxSettings_fns.h"
 #include "pulsar_boat_tofrom_ground_fns.h"
-#include "RTC_fns.h"
-
-#define GOOD true
-#define BAD false
 
 
 /*=======================*/
 /* #DEFINES              */
 /*=======================*/
+#define GOOD true
+#define BAD false
+
 #define HOST_IS_FEATHERMX    // used to select what CAN/CBP packets to decode
 
 // DS18B20 sensor - Data wire is plugged into port 2 on the Arduino
@@ -81,7 +82,7 @@
 #define SENSORPERIODSECONDS             120     // seconds - how often should we read the sensors?
 #define MAVLINKHEARTBEATPERIODSECONDS   20      // seconds - how often should we send a MAVLink HEARTBEAT to the AutoPilot
 //#define TX_TO_AP_PERIOD_SECONDS       600     // seconds - how often should we do periodic TX to AutoPilot
-#define FIRST_TX_TO_AGT_WAIT_S (10 * 60)         // seconds - how long to wait til doing first TX to AGT
+#define FIRST_TX_TO_AGT_WAIT_S (3 * 60)         // seconds - how long to wait til doing first TX to AGT.  xxx - usually 10*60
 
 // Retry Counters
 #define FMX_TX_TO_AGT_NUMTRIES_MAX      4   // how many times should the FMX try to send to the AGT before giving up for now.

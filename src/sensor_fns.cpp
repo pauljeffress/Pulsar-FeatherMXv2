@@ -33,8 +33,8 @@ void sensorsSetup()
   
 
   // setup ambient light sensor dome
-  debugPrintln("sensorsSetup() - AmbientLight initialising");
-  float lux;
+  debugPrintln("sensorsSetup() - AmbientLight initialising - CODE NOT COMPLETE!!!!!!!!!!");
+  float lux = -1; // initialise it to be the error value.
   // xxx myLux.begin();    // TODO - there is a potential dead end inside this begin code "while(lightStrengthLux()<=0);" in that library!!
   // float lux = myLux.lightStrengthLux();
   if (lux == -1) // the read failed
@@ -47,8 +47,6 @@ void sensorsSetup()
     debugPrintln("sensorsSetup() - OK");
     sensor_ambientlight_status = GOOD;
   }
-
-
 
 
   // Start up the DallasTemperature library
