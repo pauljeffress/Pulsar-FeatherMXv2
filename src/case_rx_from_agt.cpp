@@ -33,13 +33,15 @@ void case_rx_from_agt()
     if (numavail > 0)
     {
         debugPrint("\ncase_rx_from_agt() - ST num chars avail:"); debugPrintlnInt(numavail);
+        oled.println("rx_from_agt() chars avail");
     }
 
     if(numavail > (numbytesexpected - 1))  //  (sizeof(myAgtSharedSettings)-1)) i.e only proceed if the full ST blob is available for us to collect.
     {        
         STdriverF2A.rxObj(myAgtSharedSettings);     // Receive msg from AGT and store it in global myAgtSharedSettings.
 
-        debugPrintln("case_rx_from_agt() - Received a new Datum from AGT");
+        debugPrintln("case_rx_from_agt() - RX'd a new Datum from AGT");
+        //oled.println("rx_from_agt() new Datum");
 
         // Just to be defensive, check if the msg I got from AGT was NOT an ACK msg, and
         // was in fact a full msg that we want to act on etc.
@@ -47,6 +49,7 @@ void case_rx_from_agt()
         if (myAgtSharedSettings.AGT_ACK_FOR_FMX == 0)
         {
             debugPrintln("case_rx_from_agt() - Its a FULL msg so setting the following flags...");
+            oled.println("\nrx_from_agt() FULL msg");
             debugPrintln("case_rx_from_agt() - flag_got_msg_from_agt = true");
             // Set flag(s) for subsequent states to use.
             flag_got_msg_from_agt = true;   // flag for subsequent processing

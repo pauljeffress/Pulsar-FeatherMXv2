@@ -79,8 +79,7 @@
 #define POWER_FEATHER_PWR_PIN   25 // The pin the FMX controls the power supply to the Power Feather on.
 
 /// Various Timers
-#define SENSORPERIODSECONDS             120     // seconds - how often should we read the sensors?
-#define MAVLINKHEARTBEATPERIODSECONDS   20      // seconds - how often should we send a MAVLink HEARTBEAT to the AutoPilot
+
 //#define TX_TO_AP_PERIOD_SECONDS       600     // seconds - how often should we do periodic TX to AutoPilot
 #define FIRST_TX_TO_AGT_WAIT_S (3 * 60)         // seconds - how long to wait til doing first TX to AGT.  xxx - usually 10*60
 

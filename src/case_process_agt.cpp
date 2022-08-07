@@ -17,6 +17,7 @@ void case_process_agt()
     if (flag_got_msg_from_agt)
     {
         debugPrintln("\ncase_process_agt() - starting as flag_got_msg_from_agt == true");
+        oled.println("process_agt()");
         
         // Start with some basic checks on the recently received myAgtSharedSettings
         if (myAgtSharedSettings.AGT_ACK_FOR_FMX)    // don't process it if its an ACK msg
@@ -52,5 +53,6 @@ void case_process_agt()
             debugPrintln("case_process_agt() - ERROR - RX'd msg failed some checks, so NOT processing it");
         }
         debugPrintln("case_process_agt() - Complete");
+        //oled.println("case_process_agt() - Complete");
     }
 }

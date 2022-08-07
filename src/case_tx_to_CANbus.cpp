@@ -13,7 +13,8 @@ void case_tx_to_CANbus()
     if ((CANStatus)  // If the CAN bus is functioning ok and...
             && ((seconds_since_last_CAN_tx > myFmxSettings.FMX_TXCANINT) || (flag_do_CAN_tx)))
     {
-        debugPrintln("\ncase_tx_to_CANbus() - Starting");
+        debugPrintln("\ncase_tx_to_CANbus() - time to execute");
+        oled.println("\ntx_to_CANbus()");
         //Serial.println(myCANid);
         //delay(1000);     
         //CANloopbackEnable();        // ONLY FOR TESTING!!!!!!!
@@ -36,11 +37,12 @@ void case_tx_to_CANbus()
         CBPsend_uint16_t(myCANid, CBP_FMX_PRESS, myFmxSettings.FMX_PRESS);        
         CBPsend_int16_t(myCANid, CBP_FMX_WATERTEMP, myFmxSettings.FMX_WATERTEMP);
         CBPsend_int16_t(myCANid, CBP_FMX_AMBIENTLIGHT, myFmxSettings.FMX_AMBIENTLIGHT);
-
-        debugPrintln("case_tx_to_CANbus() - Complete");
         
         flag_do_CAN_tx = false; // reset the flag
         seconds_since_last_CAN_tx = 0;  // reset the counter
+
+        debugPrintln("case_tx_to_CANbus() - Finishing");
+        //oled.println("case_tx_to_CANbus() - Finishing");
     }
     else
     {

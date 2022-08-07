@@ -31,13 +31,14 @@ void loop(void)
                 timerIncrementer();
         }
 
-        // print a seconds count every 30 secs when idling around this while loop....makes visual troubleshooting easier :)
-        if (seconds_since_reset_or_powercycle > (lastsec1 + 29))
+        // print a seconds count every X secs when idling around this while loop....makes visual troubleshooting easier :)
+        if (seconds_since_reset_or_powercycle > (lastsec1 + 59))
         {
             lastsec1 = seconds_since_reset_or_powercycle;
             Serial.print("loop() - seconds_since_reset_or_powercycle=");Serial.println(seconds_since_reset_or_powercycle);
-            oled.print("secs-boot: ");   
-            oled.println(seconds_since_reset_or_powercycle);
+            oled.print(" ");   
+            oled.print(seconds_since_reset_or_powercycle);
+            oled.print("s ");
         }
 
         // Run next state

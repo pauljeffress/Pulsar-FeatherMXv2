@@ -25,6 +25,8 @@ void case_rx_from_autopilot()
         if (flag_tx_msg_to_agt) debugPrintln("flag_tx_msg_to_agt=TRUE");
         else debugPrintln("seconds_since_last_ap_rx > myFmxSettings.FMX_RXAPINT");
 
+        oled.println("\nrx_from_autopilot()");
+
 
         // Before trying to read from the streams we just ensure the 
         // AP is still streaming the messages we are going to look for.
@@ -74,5 +76,6 @@ void case_rx_from_autopilot()
         
         seconds_since_last_ap_rx = 0;    // reset counter here at the end of the process.
         debugPrintln("case_rx_from_autopilot() - Complete");
+        //oled.println("case_rx_from_autopilot() - Complete");
     }
 }   // END - case_rx_from_autopilot()

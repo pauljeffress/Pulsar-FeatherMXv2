@@ -21,6 +21,7 @@ void case_tx_to_autopilot()
     if (flag_tx_msg_to_ap)
     {
         debugPrintln("\ncase_tx_to_autopilot() - Starting for (flag_tx_msg_to_ap == true) section");
+        oled.println("\ntx_to_autopilot()");
         flag_tx_msg_to_ap = false;  // Clear flag as we don't need it after this.
         seconds_since_last_ap_tx = 0;   // reset timer.
         
@@ -291,6 +292,7 @@ void case_tx_to_autopilot()
         }
 
         debugPrintln("case_tx_to_autopilot() - Completed for (flag_got_msg_from_agt == true) section");   
+        //oled.println("case_tx_to_autopilot() - Complete");
     }   // END - if (flag_got_msg_from_agt)
 
 

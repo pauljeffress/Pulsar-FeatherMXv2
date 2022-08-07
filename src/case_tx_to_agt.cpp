@@ -41,17 +41,21 @@ void case_tx_to_agt()
         else if (flag_first_agt_tx) debugPrintln("flag_first_agt_tx=TRUE");
           else debugPrintln("seconds_since_last_agt_tx > myFmxSettings.FMX_TXAGTINT");
 
+        oled.println("\ntx_to_agt()");
+
         loadupFmxSharedSettings();          // refresh all parameters in myFmxSharedSettings.
         setFmxSharedSettingNextMagicnum();  // update the MAGICNUM in myFmxSharedSettings.
         printFmxSharedSettings();
         
         turn_on_agt_activate_pin(); // signal the TPL5110 to power up the AGT, we want to send something to it!
         
+        oled.print("Try:  ");
         while ((fmx_tx_to_agt_numtries < FMX_TX_TO_AGT_NUMTRIES_MAX) && (!result))  // Try to TX to AGT til successful or retries counts out.
         {
             fmx_tx_to_agt_numtries++;
             debugPrint("case_tx_to_agt() - TX try number:");debugPrintlnInt(fmx_tx_to_agt_numtries);
-            
+            oled.print(fmx_tx_to_agt_numtries);
+
             if (seconds_since_last_ap_rx > 30)  // if we don't have recent data from the AP, go get it before we TX to the AGT.
                 case_rx_from_autopilot();
 
@@ -67,16 +71,19 @@ void case_tx_to_agt()
                 // Check if the AGT has ACK'd our TX
                 result = wait_agt_ack();
             }
-        }
+        }   // END - While (...)
+        
         if (result) // i.e. we succeeded in tx to AGT and receiving correct ACK back.
         {
             debugPrintln("case_tx_to_agt() - Success");
+            oled.println(" OK");
             flag_tx_msg_to_agt = false;         // Clear the flag as we have succeeded.
             seconds_since_last_agt_tx =  0; // reset this counter as we have succeeded.
         }
         else // i.e. we failed in tx to AGT.
         {
             debugPrintln("case_tx_to_agt() - FAILURE");
+            oled.println(" FAIL");
             flag_tx_msg_to_agt = false;         // Clear the flag as even though we failed, we have used up our 
                                                 // attempts this time around so give up....until next time.
             seconds_since_last_agt_tx =  0;     // Even though we failed, reset this counter as we do not want the 
@@ -87,6 +94,7 @@ void case_tx_to_agt()
         turn_off_agt_activate_pin(); // allow the TPL5110 to turn off the AGT when its ready.
         
         debugPrintln("case_tx_to_agt() - Complete");
+        //oled.println("End");
     }
 
 }   // END - case_tx_to_agt()

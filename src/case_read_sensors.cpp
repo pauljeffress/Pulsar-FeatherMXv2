@@ -7,14 +7,14 @@
 
 void case_read_sensors()
 {
-
-    //debugPrintln("case_read_sensors() - executing");
-
     // is it time to do a routine sensor read?
-    if (seconds_since_last_sensors_read > SENSORPERIODSECONDS)
+    if (seconds_since_last_sensors_read > FMX_CHECKSENSORSPERIODSECONDS)
     {
         seconds_since_last_sensors_read = 0;    // Reset this timer.
         
+        debugPrintln("case_read_sensors() - time to execute");
+        //oled.println("read_sensors()");
+
         if (sensor_sht31_status)    // don't try to read the sensor once its marked bad.  The flag will be reset when Feather is reset/power-cycled.
         {
             /*
@@ -102,6 +102,10 @@ void case_read_sensors()
                 debugPrintln("case_read_sensors() - ERROR - Ambient Light sensor read failed");
             }
         }   // END - if (sensor_ambientlight_status)        
+        
+        debugPrintln("case_read_sensors() - finishing");
+        //oled.println("case_read_sensors() - finishing");
+    
     }
     else  // is it time to read sensors?
     {
